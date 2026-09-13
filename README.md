@@ -5,7 +5,7 @@ Spatial Object Systems in Python
 
 ### Folder Structure in VS Code
 
-When opened in VS Code, the project tree should look like this:
+```text
 
 gme205-lab3/
 ├── data/
@@ -21,6 +21,7 @@ gme205-lab3/
 ├── README.md
 ├── requirements.txt
 └── .venv/
+```
 
 **Reflection:**  
 This structure makes responsibilities visible before coding.  
@@ -82,3 +83,60 @@ Parcel demonstrates how multiple spatial types can share abstraction. Inheritanc
 - **Reflection:**  
  - `output/lab3_report.json` contains structured evidence (points, parcel, relationships).  
   - `output/lab3_preview.png` shows a simple visualization of the parcel and points.  
+
+
+## Part G: Testing and Debugging
+
+
+  - **Tests verify:**  
+  - Valid Point construction.  
+  - Invalid longitude raises `ValueError`.  
+  - `from_dict()` works for valid input and fails for invalid input.  
+  - `bbox()` works for Point and Parcel.  
+  - `intersects()` returns True/False correctly.  
+  - `as_dict()` contains only JSON-ready values.
+  ALL PASSED
+
+## PART H: 
+- **CHALLENGE 1- DATA -> OBJECT BOUNDARY**
+- You gain a single, reusable entry point for converting external data into a validated object.
+-  What it does is simplify external data loading and make the data → object boundary explicit. Without it, you duplicate parsing logic manually; with it, you centralize and cleanly separate responsibilities.
+
+- **CHALLENGE 2- OBJECT -> STRUCTURED OUTPUT**
+- Point.as_dict() gives you a clean dictionary.
+- Parcel.as_dict() converts Shapely geometry into a list of coordinate pairs, plus bbox as a list.
+Result: no duplication, clear object → structured output boundary.
+
+-**CHALLENGE 3- SHARED SPATIAL BEHAVIOUR**
+-  Shared spatial behavior belongs in the abstraction, ensuring consistency and avoiding duplication.
+
+- **CHALLENGE 4- EXPLAIN DISTANCE DECISION**
+- If your coordinates are longitude/latitude degrees, Shapely treats them as flat Cartesian values — not as positions on a sphere.
+- The Haversine formula interprets longitude/latitude as positions on a sphere (Earth).
+- It computes great‑circle distance, which matches geodesic meaning.
+
+README Reflection and Submission
+1. **Refactoring:**  
+   - Changed: `Point` now uses a Shapely geometry object internally.  
+   - Stable: External code still interacts with simple JSON‑ready values via `from_dict()` and `as_dict()`.
+
+2. **Responsibility:**  
+   - Shapely: low‑level geometry operations.  
+   - SpatialObject: shared spatial behavior (`intersects`, `bbox`).  
+   - Point/Parcel: domain meaning (identity, attributes, coordinate semantics).
+
+3. **Data boundary:**  
+   - `from_dict()` delegates validation to the constructor to avoid duplication and keep validation centralized.
+
+4. **Output boundary:**  
+   - `as_dict()` returns primitive, JSON‑ready values to ensure portability and avoid exposing non‑serializable Shapely objects.
+
+5. **Inheritance:**  
+   - `intersects()` belongs in `SpatialObject` to prevent duplication and guarantee consistent behavior across subclasses.
+
+6. **Coordinate meaning:**  
+   - Shapely’s `.distance()` is planar, not geodesic. Longitude/latitude require Haversine for real‑world distances in meters.
+
+7. **Scale:**  
+   - Maintainability: clear boundaries and shared behavior make the design extensible.  
+   - Performance: Slow
