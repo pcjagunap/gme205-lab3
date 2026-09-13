@@ -76,3 +76,9 @@ Shared spatial behavior belongs in `SpatialObject`. Domain-specific meaning rema
 Parcel demonstrates how multiple spatial types can share abstraction. Inheritance avoids duplication, while attributes capture domain-specific meaning.
 
 ---
+## Part F: Runner, Structured Outputs, and Visualization
+ 
+
+- **Reflection:**  
+ - `output/lab3_report.json` contains structured evidence (points, parcel, relationships).  
+  - `output/lab3_preview.png` shows a simple visualization of the parcel and points.  
