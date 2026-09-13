@@ -137,3 +137,19 @@ class Point(SpatialObject):
             "geometry": [self.lon, self.lat],
             "bbox": list(self.bbox())
         }
+
+from shapely.geometry import Polygon
+
+class Parcel(SpatialObject):
+    def __init__(self, parcel_id, geometry, attributes: dict):
+        super().__init__(geometry)
+        self.parcel_id = parcel_id
+        self.attributes = attributes
+
+    def as_dict(self):
+        return {
+            "parcel_id": self.parcel_id,
+            "bbox": list(self.bbox()),
+            "attributes": self.attributes,
+            "geometry_type": self.geometry.geom_type
+        }
