@@ -41,3 +41,25 @@ class Point:
              math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2)
         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
         return R * c
+
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        """Construct Point from a dictionary. Validation still happens in __init__."""
+        return cls(
+            d["id"],
+            d["lon"],
+            d["lat"],
+            name=d.get("name"),
+            tag=d.get("tag")
+        )
+
+    def as_dict(self):
+        """Return JSON-ready representation of the Point."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "tag": self.tag,
+            "geometry": [self.lon, self.lat],
+            "bbox": list(self.geometry.bounds)
+        }
